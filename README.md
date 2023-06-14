@@ -165,7 +165,7 @@ from nnunet_mednext.run.load_weights import upkern_load_weights
 m_net_ = create_mednext_v1(1, 3, 'S', 5)
 m_pre = create_mednext_v1(1, 3, 'S', 3)
 
-# Generally m2 would be pretrained
+# Generally m_pre would be pretrained
 m3 = upkern_load_weights(m_net_, m_pre)
 ```
 
