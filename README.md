@@ -1,6 +1,8 @@
 # MedNeXt
 
-MedNeXt is a fully ConvNeXt architecture for 3D medical image segmentation designed to leverage the 
+Copyright © German Cancer Research Center (DKFZ), [Division of Medical Image Computing (MIC)](https://www.dkfz.de/en/mic/index.php). Please make sure that your usage of this code is in compliance with the [code license](https://github.com/MIC-DKFZ/MedNeXt/blob/main/LICENSE). 
+
+**MedNeXt** is a fully ConvNeXt architecture for 3D medical image segmentation designed to leverage the 
 scalability of the ConvNeXt block while being customized to the challenges of sparsely annotated medical 
 image segmentation datasets. MedNeXt is a model under development and is expected to be updated 
 periodically in the near future. 
@@ -18,6 +20,7 @@ Please also cite the following work if you use this pipeline for training:
     nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.
 
 # Table of Contents
+- [MedNeXt](#mednext)
 - [Table of Contents](#table-of-contents)
 - [Current version and notable features](#current-versions-and-notable-features)
 - [Installation](#installation)
