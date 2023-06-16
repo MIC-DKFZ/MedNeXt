@@ -27,8 +27,8 @@ setup(name='mednextv1',
       ],
       entry_points={
           'console_scripts': [
-              'mednextv1_convert_decathlon_task = nnunet_mednext.experiment_planning.nnunet_convert_decathlon_task:main',
-              'mednextv1_plan_and_preprocess = nnunet_mednext.experiment_planning.nnunet_plan_and_preprocess:main',
+              'mednextv1_convert_decathlon_task = nnunet_mednext.experiment_planning.nnUNet_convert_decathlon_task:main',
+              'mednextv1_plan_and_preprocess = nnunet_mednext.experiment_planning.nnUNet_plan_and_preprocess:main',
               'mednextv1_train = nnunet_mednext.run.run_training:main',
               'mednextv1_train_DP = nnunet_mednext.run.run_training_DP:main',
               'mednextv1_train_DDP = nnunet_mednext.run.run_training_DDP:main',
