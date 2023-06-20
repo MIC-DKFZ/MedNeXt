@@ -1,8 +1,7 @@
 import torch
 import os
 import torch.nn as nn
-from nnunet_mednext.network_architecture.custom_modules.custom_networks.MedNeXt.MedNext \
-    import MedNeXt as MedNeXt_Orig, MedNeXt_RegularUpDown as MedNeXt_RegularUpDown_Orig
+from nnunet_mednext.network_architecture.mednextv1.MedNextV1 import MedNeXt as MedNeXt_Orig
 from nnunet_mednext.training.network_training.nnUNetTrainerV2 import nnUNetTrainerV2
 from nnunet_mednext.network_architecture.neural_network import SegmentationNetwork
 from nnunet_mednext.utilities.nd_softmax import softmax_helper
@@ -136,14 +135,14 @@ class nnUNetTrainerV2_MedNeXt_S_kernel5(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_A1_kernel5):   
+class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_S_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_A1_kernel5):   
+class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_S_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
