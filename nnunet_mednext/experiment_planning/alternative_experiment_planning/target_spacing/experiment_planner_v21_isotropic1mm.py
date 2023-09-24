@@ -46,6 +46,23 @@ class ExperimentPlanner3D_v21_customTargetSpacing_1x1x1(ExperimentPlanner3D_v21)
     def get_target_spacing(self):
         # simply return the desired spacing as np.array
         return np.array([1., 1., 1.]) # make sure this is float!!!! Not int!
+    
+    def get_properties_for_stage(
+        self, current_spacing, original_spacing, original_shape, num_cases, num_modalities, num_classes
+    ):
+        """
+        ExperimentPlanner configures pooling so that we pool late. Meaning that if the number of pooling per axis is
+        (2, 3, 3), then the first pooling operation will always pool axes 1 and 2 and not 0, irrespective of spacing.
+        This can cause a larger memory footprint, so it can be beneficial to revise this.
+
+        Here we are pooling based on the spacing of the data.
+
+        """
+        plans = super(ExperimentPlanner3D_v21_customTargetSpacing_1x1x1, self).get_properties_for_stage(
+            current_spacing, original_spacing, original_shape, num_cases, num_modalities, num_classes
+        )
+        plans["patch_size"] = [128, 128, 128]
+        return plans
 
 
 class ExperimentPlanner2D_v21_customTargetSpacing_1x1x1(ExperimentPlanner2D_v21):
@@ -61,3 +78,12 @@ class ExperimentPlanner2D_v21_customTargetSpacing_1x1x1(ExperimentPlanner2D_v21)
     def get_target_spacing(self):
         # simply return the desired spacing as np.array
         return np.array([1., 1., 1.]) # make sure this is float!!!! Not int!
+    
+    def get_properties_for_stage(
+        self, current_spacing, original_spacing, original_shape, num_cases, num_modalities, num_classes
+    ):
+        plans = super(ExperimentPlanner2D_v21_customTargetSpacing_1x1x1, self).get_properties_for_stage(
+            current_spacing, original_spacing, original_shape, num_cases, num_modalities, num_classes
+        )
+        plans["patch_size"] = [512, 512]
+        return plans
