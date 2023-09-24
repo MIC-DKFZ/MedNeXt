@@ -21,6 +21,7 @@ class MedNeXt(nn.Module):
         block_counts: list = [2,2,2,2,2,2,2,2,2], # Can be used to test staging ratio: 
                                             # [3,3,9,3] in Swin as opposed to [2,2,2,2,2] in nnUNet
         norm_type = 'group',
+        dim = '3d',                                # 2d or 3d
     ):
 
         super().__init__()
@@ -31,12 +32,18 @@ class MedNeXt(nn.Module):
         self.outside_block_checkpointing = False
         if checkpoint_style == 'outside_block':
             self.outside_block_checkpointing = True
-
+        assert dim in ['2d', '3d']
+        
         if kernel_size is not None:
             enc_kernel_size = kernel_size
             dec_kernel_size = kernel_size
 
-        self.stem = nn.Conv3d(in_channels, n_channels, kernel_size=1)
+        if dim == '2d':
+            conv = nn.Conv2d
+        elif dim == '3d':
+            conv = nn.Conv3d
+            
+        self.stem = conv(in_channels, n_channels, kernel_size=1)
         if type(exp_r) == int:
             exp_r = [exp_r for i in range(len(block_counts))]
         
@@ -48,6 +55,7 @@ class MedNeXt(nn.Module):
                 kernel_size=enc_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 ) 
             for i in range(block_counts[0])]
         ) 
@@ -59,6 +67,7 @@ class MedNeXt(nn.Module):
             kernel_size=enc_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
     
         self.enc_block_1 = nn.Sequential(*[
@@ -69,6 +78,7 @@ class MedNeXt(nn.Module):
                 kernel_size=enc_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[1])]
         )
@@ -80,6 +90,7 @@ class MedNeXt(nn.Module):
             kernel_size=enc_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
 
         self.enc_block_2 = nn.Sequential(*[
@@ -90,6 +101,7 @@ class MedNeXt(nn.Module):
                 kernel_size=enc_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[2])]
         )
@@ -101,6 +113,7 @@ class MedNeXt(nn.Module):
             kernel_size=enc_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
         
         self.enc_block_3 = nn.Sequential(*[
@@ -111,6 +124,7 @@ class MedNeXt(nn.Module):
                 kernel_size=enc_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )            
             for i in range(block_counts[3])]
         )
@@ -122,6 +136,7 @@ class MedNeXt(nn.Module):
             kernel_size=enc_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
 
         self.bottleneck = nn.Sequential(*[
@@ -132,6 +147,7 @@ class MedNeXt(nn.Module):
                 kernel_size=dec_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[4])]
         )
@@ -143,6 +159,7 @@ class MedNeXt(nn.Module):
             kernel_size=dec_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
 
         self.dec_block_3 = nn.Sequential(*[
@@ -153,6 +170,7 @@ class MedNeXt(nn.Module):
                 kernel_size=dec_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[5])]
         )
@@ -164,6 +182,7 @@ class MedNeXt(nn.Module):
             kernel_size=dec_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
 
         self.dec_block_2 = nn.Sequential(*[
@@ -174,6 +193,7 @@ class MedNeXt(nn.Module):
                 kernel_size=dec_kernel_size,
                 do_res=do_res,
                 norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[6])]
         )
@@ -185,6 +205,7 @@ class MedNeXt(nn.Module):
             kernel_size=dec_kernel_size,
             do_res=do_res_up_down,
             norm_type=norm_type,
+            dim=dim
         )
 
         self.dec_block_1 = nn.Sequential(*[
@@ -194,7 +215,8 @@ class MedNeXt(nn.Module):
                 exp_r=exp_r[7],
                 kernel_size=dec_kernel_size,
                 do_res=do_res,
-                norm_type=norm_type
+                norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[7])]
         )
@@ -205,7 +227,8 @@ class MedNeXt(nn.Module):
             exp_r=exp_r[8],
             kernel_size=dec_kernel_size,
             do_res=do_res_up_down,
-            norm_type=norm_type
+            norm_type=norm_type,
+            dim=dim
         )
 
         self.dec_block_0 = nn.Sequential(*[
@@ -215,21 +238,22 @@ class MedNeXt(nn.Module):
                 exp_r=exp_r[8],
                 kernel_size=dec_kernel_size,
                 do_res=do_res,
-                norm_type=norm_type
+                norm_type=norm_type,
+                dim=dim
                 )
             for i in range(block_counts[8])]
         )
 
-        self.out_0 = OutBlock(in_channels=n_channels, n_classes=n_classes)
+        self.out_0 = OutBlock(in_channels=n_channels, n_classes=n_classes, dim=dim)
 
         # Used to fix PyTorch checkpointing bug
         self.dummy_tensor = nn.Parameter(torch.tensor([1.]), requires_grad=True)  
 
         if deep_supervision:
-            self.out_1 = OutBlock(in_channels=n_channels*2, n_classes=n_classes)
-            self.out_2 = OutBlock(in_channels=n_channels*4, n_classes=n_classes)
-            self.out_3 = OutBlock(in_channels=n_channels*8, n_classes=n_classes)
-            self.out_4 = OutBlock(in_channels=n_channels*16, n_classes=n_classes)
+            self.out_1 = OutBlock(in_channels=n_channels*2, n_classes=n_classes, dim=dim)
+            self.out_2 = OutBlock(in_channels=n_channels*4, n_classes=n_classes, dim=dim)
+            self.out_3 = OutBlock(in_channels=n_channels*8, n_classes=n_classes, dim=dim)
+            self.out_4 = OutBlock(in_channels=n_channels*16, n_classes=n_classes, dim=dim)
 
         self.block_counts = block_counts
 
@@ -355,6 +379,7 @@ if __name__ == "__main__":
             # block_counts = [2,2,2,2,2,2,2,2,2],
             block_counts = [3,4,8,8,8,8,8,4,3],
             checkpoint_style = None,
+            dim = '2d'
             
         ).cuda()
     
@@ -379,11 +404,11 @@ if __name__ == "__main__":
     from fvcore.nn import parameter_count_table
 
     # model = ResTranUnet(img_size=128, in_channels=1, num_classes=14, dummy=False).cuda()
-    x = torch.zeros((1,1,64,64,64), requires_grad=False).cuda()
+    x = torch.zeros((1,1,64,64), requires_grad=False).cuda()
     flops = FlopCountAnalysis(network, x)
     print(flops.total())
     
     with torch.no_grad():
         print(network)
-        x = torch.zeros((2, 1, 128, 128, 128)).cuda()
+        x = torch.zeros((2, 1, 128, 128)).cuda()
         print(network(x)[0].shape)

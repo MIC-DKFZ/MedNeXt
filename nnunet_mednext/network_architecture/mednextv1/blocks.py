@@ -13,14 +13,20 @@ class MedNeXtBlock(nn.Module):
                 do_res:int=True,
                 norm_type:str = 'group',
                 n_groups:int or None = None,
+                dim = '3d'
                 ):
 
         super().__init__()
 
         self.do_res = do_res
 
+        if dim == '2d':
+            conv = nn.Conv2d
+        elif dim == '3d':
+            conv = nn.Conv3d
+            
         # First convolution layer with DepthWise Convolutions
-        self.conv1 = nn.Conv3d(
+        self.conv1 = conv(
             in_channels = in_channels,
             out_channels = in_channels,
             kernel_size = kernel_size,
@@ -42,7 +48,7 @@ class MedNeXtBlock(nn.Module):
                 )
 
         # Second convolution (Expansion) layer with Conv3D 1x1x1
-        self.conv2 = nn.Conv3d(
+        self.conv2 = conv(
             in_channels = in_channels,
             out_channels = exp_r*in_channels,
             kernel_size = 1,
@@ -54,7 +60,7 @@ class MedNeXtBlock(nn.Module):
         self.act = nn.GELU()
         
         # Third convolution (Compression) layer with Conv3D 1x1x1
-        self.conv3 = nn.Conv3d(
+        self.conv3 = conv(
             in_channels = exp_r*in_channels,
             out_channels = out_channels,
             kernel_size = 1,
@@ -77,21 +83,25 @@ class MedNeXtBlock(nn.Module):
 class MedNeXtDownBlock(MedNeXtBlock):
 
     def __init__(self, in_channels, out_channels, exp_r=4, kernel_size=7, 
-                do_res=False, norm_type = 'group'):
+                do_res=False, norm_type = 'group', dim='3d'):
 
         super().__init__(in_channels, out_channels, exp_r, kernel_size, 
-                        do_res = False, norm_type = norm_type)
+                        do_res = False, norm_type = norm_type, dim=dim)
 
+        if dim == '2d':
+            conv = nn.Conv2d
+        elif dim == '3d':
+            conv = nn.Conv3d
         self.resample_do_res = do_res
         if do_res:
-            self.res_conv = nn.Conv3d(
+            self.res_conv = conv(
                 in_channels = in_channels,
                 out_channels = out_channels,
                 kernel_size = 1,
                 stride = 2
             )
 
-        self.conv1 = nn.Conv3d(
+        self.conv1 = conv(
             in_channels = in_channels,
             out_channels = in_channels,
             kernel_size = kernel_size,
@@ -114,20 +124,26 @@ class MedNeXtDownBlock(MedNeXtBlock):
 class MedNeXtUpBlock(MedNeXtBlock):
 
     def __init__(self, in_channels, out_channels, exp_r=4, kernel_size=7, 
-                do_res=False, norm_type = 'group'):
+                do_res=False, norm_type = 'group', dim='3d'):
         super().__init__(in_channels, out_channels, exp_r, kernel_size,
-                         do_res=False, norm_type = norm_type)
+                         do_res=False, norm_type = norm_type, dim=dim)
 
         self.resample_do_res = do_res
+        
+        self.dim = dim
+        if dim == '2d':
+            conv = nn.ConvTranspose2d
+        elif dim == '3d':
+            conv = nn.ConvTranspose3d
         if do_res:            
-            self.res_conv = nn.ConvTranspose3d(
+            self.res_conv = conv(
                 in_channels = in_channels,
                 out_channels = out_channels,
                 kernel_size = 1,
                 stride = 2
                 )
 
-        self.conv1 = nn.ConvTranspose3d(
+        self.conv1 = conv(
             in_channels = in_channels,
             out_channels = in_channels,
             kernel_size = kernel_size,
@@ -141,11 +157,18 @@ class MedNeXtUpBlock(MedNeXtBlock):
         
         x1 = super().forward(x)
         # Asymmetry but necessary to match shape
-        x1 = torch.nn.functional.pad(x1, (1,0,1,0,1,0))       
+        
+        if self.dim == '2d':
+            x1 = torch.nn.functional.pad(x1, (1,0,1,0))
+        elif self.dim == '3d':
+            x1 = torch.nn.functional.pad(x1, (1,0,1,0,1,0))
         
         if self.resample_do_res:
             res = self.res_conv(x)
-            res = torch.nn.functional.pad(res, (1,0,1,0,1,0))
+            if self.dim == '2d':
+                res = torch.nn.functional.pad(res, (1,0,1,0))
+            elif self.dim == '3d':
+                res = torch.nn.functional.pad(res, (1,0,1,0,1,0))
             x1 = x1 + res
 
         return x1
@@ -153,9 +176,14 @@ class MedNeXtUpBlock(MedNeXtBlock):
 
 class OutBlock(nn.Module):
 
-    def __init__(self, in_channels, n_classes):
+    def __init__(self, in_channels, n_classes, dim):
         super().__init__()
-        self.conv_out = nn.Conv3d(in_channels, n_classes, kernel_size=1)
+        
+        if dim == '2d':
+            conv = nn.ConvTranspose2d
+        elif dim == '3d':
+            conv = nn.ConvTranspose3d
+        self.conv_out = conv(in_channels, n_classes, kernel_size=1)
     
     def forward(self, x, dummy_tensor=None): 
         return self.conv_out(x)
