@@ -147,11 +147,20 @@ def load_pretrained_weights_resampling(network, fname, verbose=False):
                     model_dict[k] = pretrained_dict[k]
                     print(f"Key {k} loaded.")
                 else:
-                    model_dict[k] = torch.nn.functional.interpolate(
-                                            pretrained_dict[k], size=spatial_dims1,
-                                            mode='trilinear'
-                                            )
-                    print(f"Key {k} interpolated trilinearly from {spatial_dims2}->{spatial_dims1} and loaded.")
+                    if len(spatial_dims1)==3:
+                        model_dict[k] = torch.nn.functional.interpolate(
+                                                pretrained_dict[k], size=spatial_dims1,
+                                                mode='trilinear'
+                                                )
+                        print(f"Key {k} interpolated trilinearly from {spatial_dims2}->{spatial_dims1} and loaded.")
+                    elif len(spatial_dims1)==2:
+                        model_dict[k] = torch.nn.functional.interpolate(
+                                                pretrained_dict[k], size=spatial_dims1,
+                                                mode='bilinear'
+                                                )
+                        print(f"Key {k} interpolated bilinearly from {spatial_dims2}->{spatial_dims1} and loaded.")
+                    else:
+                        raise TypeError('UpKern only supports 2D and 3D shapes.')
         else:   # Keys which are not shared
             warnings.warn(f"Key {k} in current_model:{k in model_dict.keys()} and pretrained_model:{k in pretrained_dict.keys()} and will not be loaded.")
 
