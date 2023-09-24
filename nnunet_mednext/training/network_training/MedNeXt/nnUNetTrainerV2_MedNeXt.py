@@ -25,6 +25,12 @@ class nnUNetTrainerV2_Optim_and_LR(nnUNetTrainerV2):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-3
 
+    def process_plans(self, plans):
+        super().process_plans(plans)
+        # Please don't do this for nnunet. This is only for MedNeXt for all the DS to be used
+        num_of_outputs_in_mednext = 5
+        self.net_num_pool_op_kernel_sizes = [[2,2,2] for i in range(num_of_outputs_in_mednext+1)]    
+    
     def initialize_optimizer_and_scheduler(self):
         assert self.network is not None, "self.initialize_network must be called first"
         self.optimizer = torch.optim.AdamW(self.network.parameters(), 
