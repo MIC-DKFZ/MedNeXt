@@ -13,16 +13,19 @@ class MedNeXtBlock(nn.Module):
                 do_res:int=True,
                 norm_type:str = 'group',
                 n_groups:int or None = None,
-                dim = '3d'
+                dim = '3d',
+                grn = False
                 ):
 
         super().__init__()
 
         self.do_res = do_res
 
-        if dim == '2d':
+        assert dim in ['2d', '3d']
+        self.dim = dim
+        if self.dim == '2d':
             conv = nn.Conv2d
-        elif dim == '3d':
+        elif self.dim == '3d':
             conv = nn.Conv3d
             
         # First convolution layer with DepthWise Convolutions
@@ -68,12 +71,30 @@ class MedNeXtBlock(nn.Module):
             padding = 0
         )
 
+        self.grn = grn
+        if grn:
+            if dim == '3d':
+                self.grn_beta = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1,1), requires_grad=True)
+                self.grn_gamma = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1,1), requires_grad=True)
+            elif dim == '2d':
+                self.grn_beta = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1), requires_grad=True)
+                self.grn_gamma = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1), requires_grad=True)
+
  
     def forward(self, x, dummy_tensor=None):
         
         x1 = x
         x1 = self.conv1(x1)
         x1 = self.act(self.conv2(self.norm(x1)))
+        if self.grn:
+            # gamma, beta: learnable affine transform parameters
+            # X: input of shape (N,C,H,W,D)
+            if self.dim == '3d':
+                gx = torch.norm(x1, p=2, dim=(-3, -2, -1), keepdim=True)
+            elif self.dim == '2d':
+                gx = torch.norm(x1, p=2, dim=(-2, -1), keepdim=True)
+            nx = gx / (gx.mean(dim=1, keepdim=True)+1e-6)
+            x1 = self.grn_gamma * (x1 * nx) + self.grn_beta + x1
         x1 = self.conv3(x1)
         if self.do_res:
             x1 = x + x1  
@@ -83,10 +104,11 @@ class MedNeXtBlock(nn.Module):
 class MedNeXtDownBlock(MedNeXtBlock):
 
     def __init__(self, in_channels, out_channels, exp_r=4, kernel_size=7, 
-                do_res=False, norm_type = 'group', dim='3d'):
+                do_res=False, norm_type = 'group', dim='3d', grn=False):
 
         super().__init__(in_channels, out_channels, exp_r, kernel_size, 
-                        do_res = False, norm_type = norm_type, dim=dim)
+                        do_res = False, norm_type = norm_type, dim=dim,
+                        grn=grn)
 
         if dim == '2d':
             conv = nn.Conv2d
@@ -124,9 +146,10 @@ class MedNeXtDownBlock(MedNeXtBlock):
 class MedNeXtUpBlock(MedNeXtBlock):
 
     def __init__(self, in_channels, out_channels, exp_r=4, kernel_size=7, 
-                do_res=False, norm_type = 'group', dim='3d'):
+                do_res=False, norm_type = 'group', dim='3d', grn = False):
         super().__init__(in_channels, out_channels, exp_r, kernel_size,
-                         do_res=False, norm_type = norm_type, dim=dim)
+                         do_res=False, norm_type = norm_type, dim=dim,
+                         grn=grn)
 
         self.resample_do_res = do_res
         
@@ -233,7 +256,7 @@ if __name__ == "__main__":
     #     x = torch.zeros((2, 12, 128, 128, 128))
     #     print(network(x).shape)
 
-    network = MedNeXtBlock(in_channels=12, out_channels=12, do_res=True, norm_type='group').cuda()
+    network = MedNeXtBlock(in_channels=12, out_channels=12, do_res=True, grn=True, norm_type='group').cuda()
     # network = LayerNorm(normalized_shape=12, data_format='channels_last').cuda()
     # network.eval()
     with torch.no_grad():
