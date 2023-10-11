@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
-from nnunet.network_architecture.custom_modules.custom_networks.TransBTS.Transformer import TransformerModel
-from nnunet.network_architecture.custom_modules.custom_networks.TransBTS.PositionalEncoding import FixedPositionalEncoding,LearnedPositionalEncoding
-from nnunet.network_architecture.custom_modules.custom_networks.TransBTS.Unet_skipconnection import Unet
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransBTS.Transformer import TransformerModel
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransBTS.PositionalEncoding import FixedPositionalEncoding,LearnedPositionalEncoding
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransBTS.Unet_skipconnection import Unet
 
 
 class TransformerBTS(nn.Module):

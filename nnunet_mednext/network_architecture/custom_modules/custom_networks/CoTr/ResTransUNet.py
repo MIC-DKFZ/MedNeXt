@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from CoTr.network_architecture import CNNBackbone
-from nnunet.network_architecture.neural_network import SegmentationNetwork
+from nnunet_mednext.network_architecture.neural_network import SegmentationNetwork
 from CoTr.network_architecture.DeTrans.DeformableTrans import DeformableTransformer
 from CoTr.network_architecture.DeTrans.position_encoding import build_position_encoding
 
