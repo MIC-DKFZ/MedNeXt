@@ -8,7 +8,7 @@ from typing import Union
 import torch.nn.functional as F
 # from lib.utils.tools.logger import Logger as Log
 # from lib.models.tools.module_helper import ModuleHelper
-from nnunet.network_architecture.custom_modules.custom_networks.UXNet3D.uxnet_encoder import uxnet_conv
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.UXNet3D.uxnet_encoder import uxnet_conv
 
 # This used to be in ModuleHelper in the original repo
 def BNReLU(num_features, bn_type=None, **kwargs):
