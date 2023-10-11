@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,6 +21,7 @@ class MedNeXtBlock(nn.Module):
         super().__init__()
 
         self.do_res = do_res
+        self.kernel_size = kernel_size
 
         assert dim in ['2d', '3d']
         self.dim = dim
@@ -80,12 +82,11 @@ class MedNeXtBlock(nn.Module):
                 self.grn_beta = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1), requires_grad=True)
                 self.grn_gamma = nn.Parameter(torch.zeros(1,exp_r*in_channels,1,1), requires_grad=True)
 
- 
     def forward(self, x, dummy_tensor=None):
         
         x1 = x
-        x1 = self.conv1(x1)
-        x1 = self.act(self.conv2(self.norm(x1)))
+        x1 = self.norm(self.conv1(x1))
+        x1 = self.act(self.conv2(self.pad_if_needed(x1)))
         if self.grn:
             # gamma, beta: learnable affine transform parameters
             # X: input of shape (N,C,H,W,D)
@@ -99,6 +100,17 @@ class MedNeXtBlock(nn.Module):
         if self.do_res:
             x1 = x + x1  
         return x1
+    
+    def pad_if_needed(self, x):
+        
+        diff = self.kernel_size-np.array(x.shape[2:])
+        diff[diff<0] = 0
+        if np.any(diff):         # Shouldn't run if there's nothing to pad
+            pad_dims = []        
+            for i in diff[::-1]:
+                pad_dims.extend([i//2, i//2+i%2])
+            x = F.pad(x, pad_dims, mode='constant', value=0)
+        return x
 
 
 class MedNeXtDownBlock(MedNeXtBlock):
