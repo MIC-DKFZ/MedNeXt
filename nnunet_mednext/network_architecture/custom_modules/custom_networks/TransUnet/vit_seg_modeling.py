@@ -16,8 +16,8 @@ import numpy as np
 from torch.nn import CrossEntropyLoss, Dropout, Softmax, Linear, Conv2d, LayerNorm
 from torch.nn.modules.utils import _pair
 from scipy import ndimage
-from nnunet.network_architecture.custom_modules.custom_networks.TransUnet import vit_seg_configs as configs
-from nnunet.network_architecture.custom_modules.custom_networks.TransUnet.vit_seg_modeling_resnet_skip import ResNetV2
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransUnet import vit_seg_configs as configs
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransUnet.vit_seg_modeling_resnet_skip import ResNetV2
 
 
 logger = logging.getLogger(__name__)

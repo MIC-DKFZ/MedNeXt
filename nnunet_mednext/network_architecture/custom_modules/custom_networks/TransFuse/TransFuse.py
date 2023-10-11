@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from torchvision.models import resnet34 as resnet
-from nnunet.network_architecture.custom_modules.custom_networks.TransFuse.DeiT import deit_small_patch16_224 as deit
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.TransFuse.DeiT import deit_small_patch16_224 as deit
 from torch.nn import CrossEntropyLoss, Dropout, Softmax, Linear, Conv2d, LayerNorm
 import torch.nn.functional as F
 import numpy as np

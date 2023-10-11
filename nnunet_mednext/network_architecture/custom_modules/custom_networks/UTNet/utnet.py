@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 
-from nnunet.network_architecture.custom_modules.custom_networks.UTNet.unet_utils import up_block, down_block
-from nnunet.network_architecture.custom_modules.custom_networks.UTNet.conv_trans_utils import *
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.UTNet.unet_utils import up_block, down_block
+from nnunet_mednext.network_architecture.custom_modules.custom_networks.UTNet.conv_trans_utils import *
 
 import pdb
 
