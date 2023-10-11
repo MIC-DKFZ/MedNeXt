@@ -1,9 +1,8 @@
 import torch
 import os
 import torch.nn as nn
-from nnunet_mednext.network_architecture.mednextv1.MedNextV1 import MedNeXt
 from nnunet_mednext.training.network_training.MedNeXt.nnUNetTrainerV2_MedNeXt \
-                                                import nnUNetTrainerV2_Optim_and_LR
+                                        import MedNeXt, nnUNetTrainerV2_Optim_and_LR
 
 class nnUNetTrainerV2_MedNeXt_GRN_L_kernel3(nnUNetTrainerV2_Optim_and_LR):   
         
