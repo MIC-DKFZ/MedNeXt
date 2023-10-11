@@ -85,8 +85,8 @@ class MedNeXtBlock(nn.Module):
     def forward(self, x, dummy_tensor=None):
         
         x1 = x
-        x1 = self.norm(self.conv1(x1))
-        x1 = self.act(self.conv2(self.pad_if_needed(x1)))
+        x1, pad_dims = self.pad_if_needed(self.norm(self.conv1(x1)))
+        x1 = self.act(self.unpad_if_needed(self.conv2(x1), pad_dims))
         if self.grn:
             # gamma, beta: learnable affine transform parameters
             # X: input of shape (N,C,H,W,D)
@@ -102,14 +102,29 @@ class MedNeXtBlock(nn.Module):
         return x1
     
     def pad_if_needed(self, x):
-        
         diff = self.kernel_size-np.array(x.shape[2:])
         diff[diff<0] = 0
+        pad_dims = None
         if np.any(diff):         # Shouldn't run if there's nothing to pad
             pad_dims = []        
             for i in diff[::-1]:
-                pad_dims.extend([i//2, i//2+i%2])
+                pad_dims.extend([i//2+i%2, i//2])
             x = F.pad(x, pad_dims, mode='constant', value=0)
+        return x, pad_dims
+    
+    def unpad_if_needed(self, x, pad_dims):
+        if pad_dims is not None:
+            pad_dims = pad_dims[::-1]
+            for i in range(0, len(pad_dims),2):
+                if pad_dims[i+1] == 0:
+                    pad_dims[i+1]=x.shape[2+i//2]
+                else:
+                    pad_dims[i+1]*=-1
+                
+            if self.dim == '2d':
+                x = x[...,pad_dims[0]:pad_dims[1],pad_dims[2]:pad_dims[3]]
+            else:
+                x = x[...,pad_dims[0]:pad_dims[1],pad_dims[2]:pad_dims[3],pad_dims[4]:pad_dims[5]]
         return x
 
 
@@ -268,10 +283,10 @@ if __name__ == "__main__":
     #     x = torch.zeros((2, 12, 128, 128, 128))
     #     print(network(x).shape)
 
-    network = MedNeXtBlock(in_channels=12, out_channels=12, do_res=True, grn=True, norm_type='group').cuda()
+    network = MedNeXtBlock(in_channels=12, out_channels=12, kernel_size=7, do_res=True, grn=True, norm_type='group').cuda()
     # network = LayerNorm(normalized_shape=12, data_format='channels_last').cuda()
     # network.eval()
     with torch.no_grad():
         print(network)
-        x = torch.zeros((2, 12, 64, 64, 64)).cuda()
+        x = torch.zeros((2, 12, 5, 64, 64)).cuda()
         print(network(x).shape)

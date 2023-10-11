@@ -305,6 +305,7 @@ class MedNeXt(nn.Module):
                 x_ds_4 = checkpoint.checkpoint(self.out_4, x, self.dummy_tensor)
 
             x_up_3 = checkpoint.checkpoint(self.up_3, x, self.dummy_tensor)
+            # x_res_3, x_up_3 = self.pad_if_needed(x_res_3, x_up_3)
             dec_x = x_res_3 + x_up_3 
             x = self.iterative_checkpoint(self.dec_block_3, dec_x)
             if self.do_ds:
@@ -312,6 +313,7 @@ class MedNeXt(nn.Module):
             del x_res_3, x_up_3
 
             x_up_2 = checkpoint.checkpoint(self.up_2, x, self.dummy_tensor)
+            # x_res_2, x_up_2 = self.pad_if_needed(x_res_2, x_up_2)
             dec_x = x_res_2 + x_up_2 
             x = self.iterative_checkpoint(self.dec_block_2, dec_x)
             if self.do_ds:
@@ -319,6 +321,7 @@ class MedNeXt(nn.Module):
             del x_res_2, x_up_2
 
             x_up_1 = checkpoint.checkpoint(self.up_1, x, self.dummy_tensor)
+            # x_res_1, x_up_1 = self.pad_if_needed(x_res_1, x_up_1)
             dec_x = x_res_1 + x_up_1 
             x = self.iterative_checkpoint(self.dec_block_1, dec_x)
             if self.do_ds:
@@ -326,6 +329,7 @@ class MedNeXt(nn.Module):
             del x_res_1, x_up_1
 
             x_up_0 = checkpoint.checkpoint(self.up_0, x, self.dummy_tensor)
+            # x_res_0, x_up_0 = self.pad_if_needed(x_res_0, x_up_0)
             dec_x = x_res_0 + x_up_0 
             x = self.iterative_checkpoint(self.dec_block_0, dec_x)
             del x_res_0, x_up_0, dec_x
@@ -347,6 +351,7 @@ class MedNeXt(nn.Module):
                 x_ds_4 = self.out_4(x)
 
             x_up_3 = self.up_3(x)
+            # x_res_3, x_up_3 = self.pad_if_needed(x_res_3, x_up_3)
             dec_x = x_res_3 + x_up_3 
             x = self.dec_block_3(dec_x)
 
@@ -355,6 +360,7 @@ class MedNeXt(nn.Module):
             del x_res_3, x_up_3
 
             x_up_2 = self.up_2(x)
+            # x_res_2, x_up_2 = self.pad_if_needed(x_res_2, x_up_2)
             dec_x = x_res_2 + x_up_2 
             x = self.dec_block_2(dec_x)
             if self.do_ds:
@@ -362,6 +368,7 @@ class MedNeXt(nn.Module):
             del x_res_2, x_up_2
 
             x_up_1 = self.up_1(x)
+            # x_res_1, x_up_1 = self.pad_if_needed(x_res_1, x_up_1)
             dec_x = x_res_1 + x_up_1 
             x = self.dec_block_1(dec_x)
             if self.do_ds:
@@ -369,6 +376,7 @@ class MedNeXt(nn.Module):
             del x_res_1, x_up_1
 
             x_up_0 = self.up_0(x)
+            # x_res_0, x_up_0 = self.pad_if_needed(x_res_0, x_up_0)
             dec_x = x_res_0 + x_up_0 
             x = self.dec_block_0(dec_x)
             del x_res_0, x_up_0, dec_x
@@ -389,14 +397,14 @@ if __name__ == "__main__":
             n_classes = 13,
             exp_r=[2,3,4,4,4,4,4,3,2],         # Expansion ratio as in Swin Transformers
             # exp_r = 2,
-            kernel_size=3,                     # Can test kernel_size
+            kernel_size=7,                     # Can test kernel_size
             deep_supervision=True,             # Can be used to test deep supervision
             do_res=True,                      # Can be used to individually test residual connection
             do_res_up_down = True,
-            # block_counts = [2,2,2,2,2,2,2,2,2],
-            block_counts = [3,4,8,8,8,8,8,4,3],
+            block_counts = [2,2,2,2,2,2,2,2,2],
+            # block_counts = [3,4,8,8,8,8,8,4,3],
             checkpoint_style = None,
-            dim = '2d',
+            dim = '3d',
             grn=True
             
         ).cuda()
@@ -422,11 +430,11 @@ if __name__ == "__main__":
     from fvcore.nn import parameter_count_table
 
     # model = ResTranUnet(img_size=128, in_channels=1, num_classes=14, dummy=False).cuda()
-    x = torch.zeros((1,1,64,64,64), requires_grad=False).cuda()
+    x = torch.zeros((1,1,32,64,64), requires_grad=False).cuda()
     flops = FlopCountAnalysis(network, x)
     print(flops.total())
     
     with torch.no_grad():
         print(network)
-        x = torch.zeros((1, 1, 128, 128, 128)).cuda()
+        x = torch.zeros((1, 1, 32, 128, 128)).cuda()
         print(network(x)[0].shape)
