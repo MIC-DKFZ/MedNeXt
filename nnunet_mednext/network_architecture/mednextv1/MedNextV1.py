@@ -305,7 +305,6 @@ class MedNeXt(nn.Module):
                 x_ds_4 = checkpoint.checkpoint(self.out_4, x, self.dummy_tensor)
 
             x_up_3 = checkpoint.checkpoint(self.up_3, x, self.dummy_tensor)
-            # x_res_3, x_up_3 = self.pad_if_needed(x_res_3, x_up_3)
             dec_x = x_res_3 + x_up_3 
             x = self.iterative_checkpoint(self.dec_block_3, dec_x)
             if self.do_ds:
@@ -313,7 +312,6 @@ class MedNeXt(nn.Module):
             del x_res_3, x_up_3
 
             x_up_2 = checkpoint.checkpoint(self.up_2, x, self.dummy_tensor)
-            # x_res_2, x_up_2 = self.pad_if_needed(x_res_2, x_up_2)
             dec_x = x_res_2 + x_up_2 
             x = self.iterative_checkpoint(self.dec_block_2, dec_x)
             if self.do_ds:
@@ -321,7 +319,6 @@ class MedNeXt(nn.Module):
             del x_res_2, x_up_2
 
             x_up_1 = checkpoint.checkpoint(self.up_1, x, self.dummy_tensor)
-            # x_res_1, x_up_1 = self.pad_if_needed(x_res_1, x_up_1)
             dec_x = x_res_1 + x_up_1 
             x = self.iterative_checkpoint(self.dec_block_1, dec_x)
             if self.do_ds:
@@ -329,7 +326,6 @@ class MedNeXt(nn.Module):
             del x_res_1, x_up_1
 
             x_up_0 = checkpoint.checkpoint(self.up_0, x, self.dummy_tensor)
-            # x_res_0, x_up_0 = self.pad_if_needed(x_res_0, x_up_0)
             dec_x = x_res_0 + x_up_0 
             x = self.iterative_checkpoint(self.dec_block_0, dec_x)
             del x_res_0, x_up_0, dec_x
@@ -351,7 +347,6 @@ class MedNeXt(nn.Module):
                 x_ds_4 = self.out_4(x)
 
             x_up_3 = self.up_3(x)
-            # x_res_3, x_up_3 = self.pad_if_needed(x_res_3, x_up_3)
             dec_x = x_res_3 + x_up_3 
             x = self.dec_block_3(dec_x)
 
@@ -360,7 +355,6 @@ class MedNeXt(nn.Module):
             del x_res_3, x_up_3
 
             x_up_2 = self.up_2(x)
-            # x_res_2, x_up_2 = self.pad_if_needed(x_res_2, x_up_2)
             dec_x = x_res_2 + x_up_2 
             x = self.dec_block_2(dec_x)
             if self.do_ds:
@@ -368,7 +362,6 @@ class MedNeXt(nn.Module):
             del x_res_2, x_up_2
 
             x_up_1 = self.up_1(x)
-            # x_res_1, x_up_1 = self.pad_if_needed(x_res_1, x_up_1)
             dec_x = x_res_1 + x_up_1 
             x = self.dec_block_1(dec_x)
             if self.do_ds:
@@ -376,7 +369,6 @@ class MedNeXt(nn.Module):
             del x_res_1, x_up_1
 
             x_up_0 = self.up_0(x)
-            # x_res_0, x_up_0 = self.pad_if_needed(x_res_0, x_up_0)
             dec_x = x_res_0 + x_up_0 
             x = self.dec_block_0(dec_x)
             del x_res_0, x_up_0, dec_x
