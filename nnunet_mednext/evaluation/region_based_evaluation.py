@@ -221,8 +221,8 @@ def main():
         regions(),
         )
 
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    main()
 
     # collect_cv_niftis('./', './cv_niftis')
     # evaluate_regions('./cv_niftis/', './gt_niftis/', get_brats_regions())
