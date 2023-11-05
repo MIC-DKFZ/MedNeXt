@@ -1,13 +1,26 @@
 import torch
 import os
 import torch.nn as nn
-from nnunet_mednext.network_architecture.mednextv1.MedNextV1 import MedNeXt as MedNeXt_Orig
+from nnunet_mednext.network_architecture.mednextv1.MedNextV1 import MedNeXt as MedNeXt_Orig, \
+                                            MedNeXt_RegularUpDown as MedNeXt_RegularUpDown_Orig
 from nnunet_mednext.training.network_training.nnUNetTrainerV2 import nnUNetTrainerV2
 from nnunet_mednext.network_architecture.neural_network import SegmentationNetwork
 from nnunet_mednext.utilities.nd_softmax import softmax_helper
 
 
 class MedNeXt(MedNeXt_Orig, SegmentationNetwork):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Segmentation Network Params. Needed for the nnUNet evaluation pipeline
+        self.conv_op = nn.Conv3d
+        self.inference_apply_nonlin = softmax_helper
+        self.input_shape_must_be_divisible_by = 2**5
+        self.num_classes = kwargs['n_classes']
+        # self.do_ds = False        Already added this in the main class
+
+
+class MedNeXt_RegularUpDown(MedNeXt_RegularUpDown_Orig, SegmentationNetwork):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -99,6 +112,32 @@ class nnUNetTrainerV2_MedNeXt_B_kernel3_GRN(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
+class nnUNetTrainerV2_MedNeXt_RegularUpDown_B_kernel3(nnUNetTrainerV2_Optim_and_LR):   
+        
+    def initialize_network(self):
+        self.network = MedNeXt_RegularUpDown(
+            in_channels = self.num_input_channels, 
+            n_channels = 32,
+            n_classes = self.num_classes, 
+            exp_r=[2,3,4,4,4,4,4,3,2],         # Expansion ratio as in Swin Transformers
+            kernel_size=3,                     # Can test kernel_size
+            deep_supervision=True,             # Can be used to test deep supervision
+            do_res=True,                      # Can be used to individually test residual connection
+            do_res_up_down = True,
+            block_counts = [2,2,2,2,2,2,2,2,2],
+            grn = False
+        )
+
+        if torch.cuda.is_available():
+            self.network.cuda()
+
+
+class nnUNetTrainerV2_MedNeXt_B_kernel3_GRN_2X(nnUNetTrainerV2_MedNeXt_B_kernel3_GRN):   
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class nnUNetTrainerV2_MedNeXt_M_kernel3(nnUNetTrainerV2_Optim_and_LR):   
         
     def initialize_network(self):
@@ -141,6 +180,29 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
+class nnUNetTrainerV2_MedNeXt_RegularUpDown_L_kernel3(nnUNetTrainerV2_Optim_and_LR):   
+        
+    def initialize_network(self):
+        self.network = MedNeXt_RegularUpDown(
+            in_channels = self.num_input_channels, 
+            n_channels = 32,
+            n_classes = self.num_classes, 
+            exp_r=[3,4,8,8,8,8,8,4,3],         # Expansion ratio as in Swin Transformers
+            # exp_r=[3,4,8,8,8,8,8,4,3],         # Expansion ratio as in Swin Transformers
+            kernel_size=3,                     # Can test kernel_size
+            deep_supervision=True,             # Can be used to test deep supervision
+            do_res=True,                      # Can be used to individually test residual connection
+            do_res_up_down = True,
+            # block_counts = [6,6,6,6,4,2,2,2,2],
+            block_counts = [3,4,8,8,8,8,8,4,3],
+            checkpoint_style = 'outside_block',
+            grn = False
+        )
+
+        if torch.cuda.is_available():
+            self.network.cuda()
+            
+
 class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN(nnUNetTrainerV2_Optim_and_LR):   
         
     def initialize_network(self):
@@ -162,6 +224,12 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN(nnUNetTrainerV2_Optim_and_LR):
 
         if torch.cuda.is_available():
             self.network.cuda()
+
+
+class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN_2X(nnUNetTrainerV2_MedNeXt_L_kernel3_GRN):   
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 # Kernels of size 5
