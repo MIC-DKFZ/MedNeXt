@@ -212,6 +212,75 @@ class OutBlock(nn.Module):
         return self.conv_out(x)
 
 
+class RegularDownsampleBlock(nn.Module):
+
+    def __init__(self, in_channels, out_channels, norm_type = 'group', dim='3d'):
+        super().__init__()
+
+        if norm_type=='group':
+            self.norm = nn.GroupNorm(
+                num_groups=in_channels, 
+                num_channels=in_channels
+                )
+        elif norm_type=='layer':
+            self.norm = LayerNorm(
+                normalized_shape=in_channels, 
+                data_format='channels_first'
+                )
+
+        assert dim in ['2d', '3d']
+        if dim == '3d':
+            conv = nn.Conv3d
+        else:
+            conv = nn.Conv2d
+            
+        
+        self.conv1 = conv(in_channels, out_channels, 
+                        kernel_size=2, stride=2, padding=0
+                        )
+
+    def forward(self, x, dummy_tensor=None):
+
+        x = self.norm(x)
+        x = self.conv1(x)
+        
+        return x
+
+
+class RegularUpsampleBlock(nn.Module):
+    
+    def __init__(self, in_channels, out_channels, norm_type = 'group', dim='3d'):
+        super().__init__()
+
+        if norm_type=='group':
+            self.norm = nn.GroupNorm(
+                num_groups=in_channels, 
+                num_channels=in_channels
+                )
+        elif norm_type=='layer':
+            self.norm = LayerNorm(
+                normalized_shape=in_channels, 
+                data_format='channels_first'
+                )
+        
+        assert dim in ['2d', '3d']
+        if dim == '3d':
+            conv = nn.ConvTranspose3d
+        else:
+            conv = nn.ConvTranspose2d
+
+
+        self.conv1 = conv(in_channels, out_channels, 
+                    kernel_size=2, stride=2, padding=0
+                    )
+
+    def forward(self, x, dummy_tensor=None):
+
+        x = self.norm(x)
+        x = self.conv1(x)
+        return x
+
+
 class LayerNorm(nn.Module):
     """ LayerNorm that supports two data formats: channels_last (default) or channels_first. 
     The ordering of the dimensions in the inputs. channels_last corresponds to inputs with 

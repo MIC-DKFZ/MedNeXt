@@ -381,9 +381,96 @@ class MedNeXt(nn.Module):
             return x
 
 
+class MedNeXt_RegularUpDown(MedNeXt):
+    
+    def __init__(self, 
+                 in_channels: int, 
+                 n_channels: int, 
+                 n_classes: int, 
+                 exp_r: int = 4, 
+                 kernel_size: int = 7, 
+                 enc_kernel_size: int = None, 
+                 dec_kernel_size: int = None, 
+                 deep_supervision: bool = False, 
+                 do_res: bool = False, 
+                 do_res_up_down: bool = False, 
+                 checkpoint_style: bool = None, 
+                 block_counts: list = [2, 2, 2, 2, 2, 2, 2, 2, 2], 
+                 norm_type='group', 
+                 dim='3d', 
+                 grn=False):
+        
+        super().__init__(
+                in_channels, 
+                n_channels, 
+                n_classes, 
+                exp_r, 
+                kernel_size, 
+                enc_kernel_size, 
+                dec_kernel_size, 
+                deep_supervision, 
+                do_res, 
+                do_res_up_down, 
+                checkpoint_style, 
+                block_counts, 
+                norm_type, 
+                dim, 
+                grn
+            )
+        
+        self.down_0 = RegularDownsampleBlock(
+            in_channels=n_channels,
+            out_channels=2*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.down_1 = RegularDownsampleBlock(
+            in_channels=2*n_channels,
+            out_channels=4*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.down_2 = RegularDownsampleBlock(
+            in_channels=4*n_channels,
+            out_channels=8*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.down_3 = RegularDownsampleBlock(
+            in_channels=8*n_channels,
+            out_channels=16*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.up_3 = RegularUpsampleBlock(
+            in_channels=16*n_channels,
+            out_channels=8*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.up_2 =RegularUpsampleBlock(
+            in_channels=8*n_channels,
+            out_channels=4*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.up_1 = RegularUpsampleBlock(
+            in_channels=4*n_channels,
+            out_channels=2*n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+        self.up_0 =  RegularUpsampleBlock(
+            in_channels=2*n_channels,
+            out_channels=n_channels,
+            norm_type=norm_type,
+            dim=dim
+        )
+
+
 if __name__ == "__main__":
 
-    network = MedNeXt(
+    network = MedNeXt_RegularUpDown(
             in_channels = 1, 
             n_channels = 32,
             n_classes = 13,
@@ -422,11 +509,11 @@ if __name__ == "__main__":
     from fvcore.nn import parameter_count_table
 
     # model = ResTranUnet(img_size=128, in_channels=1, num_classes=14, dummy=False).cuda()
-    x = torch.zeros((1,1,64,64,64), requires_grad=False).cuda()
+    x = torch.zeros((1,1,64,64), requires_grad=False).cuda()
     flops = FlopCountAnalysis(network, x)
     print(flops.total())
     
     with torch.no_grad():
         print(network)
-        x = torch.zeros((1, 1, 128, 128, 128)).cuda()
+        x = torch.zeros((1, 1, 128, 128)).cuda()
         print(network(x)[0].shape)
