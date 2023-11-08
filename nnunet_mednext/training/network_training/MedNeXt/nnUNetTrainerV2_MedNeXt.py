@@ -389,7 +389,7 @@ class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel7(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN(nnUNetTrainerV2_Optim_and_LR):   
     
     def initialize_network(self):
         self.network = MedNeXt(
@@ -411,7 +411,7 @@ class nnUNetTrainerV2_MedNeXt_L_kernel7(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel7_25bpe(nnUNetTrainerV2_MedNeXt_L_kernel7):   
+class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_25bpe(nnUNetTrainerV2_MedNeXt_L_kernel7_GRN):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
