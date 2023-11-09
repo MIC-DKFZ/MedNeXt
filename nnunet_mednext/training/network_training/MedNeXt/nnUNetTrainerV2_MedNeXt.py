@@ -416,4 +416,12 @@ class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_25bpe(nnUNetTrainerV2_MedNeXt_L_kern
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.initial_lr = 5e-4
-        self.num_batches_per_epoch =25
+        self.num_batches_per_epoch = 25
+        
+
+class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_100bpe(nnUNetTrainerV2_MedNeXt_L_kernel7_GRN):   
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.initial_lr = 5e-4
+        self.num_batches_per_epoch = 100
