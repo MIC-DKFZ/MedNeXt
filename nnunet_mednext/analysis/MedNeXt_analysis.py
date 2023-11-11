@@ -1,6 +1,5 @@
 import torch
-from nnunet.network_architecture.custom_modules.custom_networks.MedNeXt.MedNext \
-    import MedNeXt    
+from nnunet_mednext.network_architecture.mednextv1.MedNextV1 import MedNeXt    
 
 from fvcore.nn import FlopCountAnalysis
 from fvcore.nn import parameter_count_table
