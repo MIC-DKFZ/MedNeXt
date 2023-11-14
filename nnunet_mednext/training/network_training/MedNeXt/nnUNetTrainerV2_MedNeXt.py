@@ -276,6 +276,10 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN_2X(nnUNetTrainerV2_MedNeXt_L_kernel3
 # Kernels of size 5
 class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.num_batches_per_epoch = 125
+
     def initialize_network(self):
         self.network = MedNeXt(
             in_channels = self.num_input_channels, 
@@ -309,6 +313,10 @@ class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN_lr_25e_5(nnUNetTrainerV2_MedNeXt_S_k
 
 
 class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.num_batches_per_epoch = 125
 
     def initialize_network(self):
         self.network = MedNeXt(
@@ -357,6 +365,10 @@ class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_B_ke
 
 class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.num_batches_per_epoch = 125
+
     def initialize_network(self):
         self.network = MedNeXt(
             in_channels = self.num_input_channels, 
@@ -398,6 +410,10 @@ class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_M_ke
 
 
 class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.num_batches_per_epoch = 125
     
     def initialize_network(self):
         self.network = MedNeXt(
