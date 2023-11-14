@@ -328,6 +328,12 @@ class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
+class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_NoUpKern(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)    
+
+
 class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_lr_5e_4(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
     
     def __init__(self, *args, **kwargs):
