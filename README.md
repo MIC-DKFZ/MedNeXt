@@ -43,7 +43,7 @@ The repository can be cloned and installed using the following commands.
 ```bash
 git clone https://github.com/MIC-DKFZ/MedNeXt.git mednext
 cd mednext
-pip install -U .
+pip install -e .
 ```
 
 # MedNeXt Architecture and Usage in external pipelines
@@ -189,7 +189,7 @@ spacing to 1mm isotropic since those are the experimental conditions used in the
 
 ## Train MedNeXt using nnUNet (v1) training
 MedNeXt has custom nnUNet (v1) trainers that allow it to be trained similar to the base architecture. 
-Please check the old nnUNet(v1) branch in the nnUNet repo, if you are unfamiliar with this code format. Please look (here)[https://github.com/MIC-DKFZ/MedNeXt/blob/main/nnunet_mednext/training/network_training/MedNeXt/nnUNetTrainerV2_MedNeXt.py] for all available trainers to recreate the MICCAI 2023 experiments. Please note that all trainers are in 3D since the architecture was tested in 3D. You can of course, create your custom trainers if you want (including 2D trainers for 2D architectures). 
+Please check the old nnUNet(v1) branch in the nnUNet repo, if you are unfamiliar with this code format. Please look [here](https://github.com/MIC-DKFZ/MedNeXt/blob/main/nnunet_mednext/training/network_training/MedNeXt/nnUNetTrainerV2_MedNeXt.py) for all available trainers to recreate the MICCAI 2023 experiments. Please note that all trainers are in 3D since the architecture was tested in 3D. You can of course, create your custom trainers if you want (including 2D trainers for 2D architectures). 
 ```
 mednextv1_train 3d_fullres TRAINER TASK_NUMBER FOLD -p nnUNetPlansv2.1_trgSp_1x1x1
 ```
