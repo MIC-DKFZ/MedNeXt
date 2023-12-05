@@ -106,7 +106,7 @@ def evaluate_case_dc(file_pred: str, file_gt: str, regions):
         mask_pred = create_region_from_mask(image_pred, r)
         mask_gt = create_region_from_mask(image_gt, r)
         dc = np.nan if np.sum(mask_gt) == 0 and np.sum(mask_pred) == 0 \
-                            else metrics.compute_dice_coefficient(mask_pred, mask_gt)
+                            else metrics.compute_dice_coefficient(mask_gt, mask_pred)
         results.append(dc)
     return results
 
