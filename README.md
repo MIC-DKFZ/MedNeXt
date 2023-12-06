@@ -9,10 +9,13 @@ periodically in the near future.
 
 The current training framework is built on top of nnUNet (v1) - the module name `nnunet_mednext` reflects this. You are free to adopt the architecture for your own training pipeline or use the one in this repository. Instructions are provided for both paths. 
 
+[**[arXiv, 2023]**](https://arxiv.org/abs/2303.09975) [**[MICCAI 2023]**](https://link.springer.com/chapter/10.1007/978-3-031-43901-8_39)
+
 Please cite the following work if you find this model useful for your research:
 
-    Roy, S., Koehler, G., Ulrich, C., Baumgartner, M., Petersen, J., Isensee, F., Jaeger, P.F. & Maier-Hein, K.(2023). 
-    MedNeXt: Transformer-driven Scaling of ConvNets for Medical Image Segmentation. arXiv preprint arXiv:2303.09975.
+    Roy, S., Koehler, G., Ulrich, C., Baumgartner, M., Petersen, J., Isensee, F., Jaeger, P.F. & Maier-Hein, K. (2023).
+    MedNeXt: Transformer-driven Scaling of ConvNets for Medical Image Segmentation. 
+    International Conference on Medical Image Computing and Computer-Assisted Intervention (MICCAI), 2023.
 
 Please also cite the following work if you use this pipeline for training:
 
