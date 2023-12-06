@@ -33,6 +33,9 @@ Please also cite the following work if you use this pipeline for training:
     - [Individual Usage of MedNeXt blocks](#individual-usage-of-mednext-blocks)
     - [UpKern weight loading](#upkern-weight-loading)
 - [Usage of internal training pipeline](#usage-of-internal-training-pipeline)
+    - [Plan and Preprocess](#plan-and-preprocess)
+    - [Train MedNeXt using nnUNet (v1) training](#train-mednext-using-nnunet-v1-training)
+    - [Train a kernel 5x5x5 version using UpKern](#train-a-kernel-5x5x5-version-using-upkern)
 
 # Current Versions and notable features:
 
