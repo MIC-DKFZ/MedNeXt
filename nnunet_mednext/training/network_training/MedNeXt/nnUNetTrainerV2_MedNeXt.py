@@ -267,6 +267,13 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN(nnUNetTrainerV2_Optim_and_LR):
             self.network.cuda()
 
 
+class nnUNetTrainerV2_MedNeXt_L_kernel3_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel3_GRN):   
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial_lr = 1e-4
+
+
 class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN_2X(nnUNetTrainerV2_MedNeXt_L_kernel3_GRN):   
         
     def __init__(self, *args, **kwargs):
