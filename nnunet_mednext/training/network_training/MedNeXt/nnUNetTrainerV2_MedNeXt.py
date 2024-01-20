@@ -288,7 +288,7 @@ class nnUNetTrainerV2_MedNeXt_L_kernel3_GRN_2X(nnUNetTrainerV2_MedNeXt_L_kernel3
 
 
 # Kernels of size 5
-class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_S_kernel5(nnUNetTrainerV2_Optim_and_LR):   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -304,28 +304,28 @@ class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):
             do_res=True,                       # Can be used to individually test residual connection
             do_res_up_down = True,
             block_counts = [2,2,2,2,2,2,2,2,2],
-            grn = True
+            grn = False
         )
 
         if torch.cuda.is_available():
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_S_kernel5_GRN):
+class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_S_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_S_kernel5_GRN_lr_25e_5(nnUNetTrainerV2_MedNeXt_S_kernel5_GRN):
+class nnUNetTrainerV2_MedNeXt_S_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_S_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_B_kernel5(nnUNetTrainerV2_Optim_and_LR):   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -341,41 +341,41 @@ class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):
             do_res=True,                      # Can be used to individually test residual connection
             do_res_up_down = True,
             block_counts = [2,2,2,2,2,2,2,2,2],
-            grn = True
+            grn = False
         )
 
         if torch.cuda.is_available():
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_NoUpKern(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_B_kernel5_NoUpKern(nnUNetTrainerV2_MedNeXt_B_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)    
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_lr_5e_4(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_B_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_lr_25e_5(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_B_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_B_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_B_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_B_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_B_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_M_kernel5(nnUNetTrainerV2_Optim_and_LR):   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -392,35 +392,35 @@ class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):
             do_res_up_down = True,
             block_counts = [3,4,4,4,4,4,4,4,3],
             checkpoint_style = 'outside_block',
-            grn = True
+            grn = False
         )
 
         if torch.cuda.is_available():
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN_lr_5e_4(nnUNetTrainerV2_MedNeXt_M_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_M_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN_lr_25e_5(nnUNetTrainerV2_MedNeXt_M_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_M_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_M_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_M_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_M_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_M_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_L_kernel5(nnUNetTrainerV2_Optim_and_LR):   
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -438,41 +438,41 @@ class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN(nnUNetTrainerV2_Optim_and_LR):
             # block_counts = [6,6,6,6,4,2,2,2,2],
             block_counts = [3,4,8,8,8,8,8,4,3],
             checkpoint_style = 'outside_block',
-            grn = True
+            grn = False
         )
 
         if torch.cuda.is_available():
             self.network.cuda()
             
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN_NoUpKern(nnUNetTrainerV2_MedNeXt_L_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel5_NoUpKern(nnUNetTrainerV2_MedNeXt_L_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)    
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN_lr_5e_4(nnUNetTrainerV2_MedNeXt_L_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_5e_4(nnUNetTrainerV2_MedNeXt_L_kernel5):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 5e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN_lr_25e_5(nnUNetTrainerV2_MedNeXt_L_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_25e_5(nnUNetTrainerV2_MedNeXt_L_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 25e-5
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel5_GRN_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel5_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel5):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.initial_lr = 1e-4
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN(nnUNetTrainerV2_Optim_and_LR):   
+class nnUNetTrainerV2_MedNeXt_L_kernel7(nnUNetTrainerV2_Optim_and_LR):   
     
     def initialize_network(self):
         self.network = MedNeXt(
@@ -487,14 +487,14 @@ class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN(nnUNetTrainerV2_Optim_and_LR):
             # block_counts = [6,6,6,6,4,2,2,2,2],
             block_counts = [3,4,8,8,8,8,8,4,3],
             checkpoint_style = 'outside_block',
-            grn=True
+            grn=False
         )
 
         if torch.cuda.is_available():
             self.network.cuda()
 
 
-class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_25bpe(nnUNetTrainerV2_MedNeXt_L_kernel7_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel7_25bpe(nnUNetTrainerV2_MedNeXt_L_kernel7):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -502,9 +502,9 @@ class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_25bpe(nnUNetTrainerV2_MedNeXt_L_kern
         self.num_batches_per_epoch = 25
         
 
-class nnUNetTrainerV2_MedNeXt_L_kernel7_GRN_100bpe(nnUNetTrainerV2_MedNeXt_L_kernel7_GRN):   
+class nnUNetTrainerV2_MedNeXt_L_kernel7_125bpe(nnUNetTrainerV2_MedNeXt_L_kernel7):   
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # self.initial_lr = 5e-4
-        self.num_batches_per_epoch = 100
+        self.num_batches_per_epoch = 125
