@@ -472,6 +472,13 @@ class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_1e_4(nnUNetTrainerV2_MedNeXt_L_kernel
         self.initial_lr = 1e-4
 
 
+class nnUNetTrainerV2_MedNeXt_L_kernel5_lr_5e_5(nnUNetTrainerV2_MedNeXt_L_kernel5):   
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.initial_lr = 5e-5
+        
+
 class nnUNetTrainerV2_MedNeXt_L_kernel7(nnUNetTrainerV2_Optim_and_LR):   
     
     def initialize_network(self):
