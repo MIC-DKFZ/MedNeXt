@@ -152,7 +152,7 @@ class nnUNetTrainerV2_ResTrans(nnUNetTrainer):
         Known issue: forgot to set neg_slope=0 in InitWeights_He; should not make a difference though
         :return:
         """
-        self.network = ResTransUnet(norm_cfg=self.norm_cfg, activation_cfg=self.activation_cfg,
+        self.network = ResTransUNet(norm_cfg=self.norm_cfg, activation_cfg=self.activation_cfg,
                                  img_size=128, in_channels=self.num_input_channels,
                                  num_classes=self.num_classes, weight_std=False, 
                                  deep_supervision=True, dummy=False)
@@ -432,7 +432,7 @@ class nnUNetTrainerV2_ResTrans_Dummy(nnUNetTrainerV2_ResTrans):
         Known issue: forgot to set neg_slope=0 in InitWeights_He; should not make a difference though
         :return:
         """
-        self.network = ResTranUnet(norm_cfg=self.norm_cfg, 
+        self.network = ResTransUNet(norm_cfg=self.norm_cfg, 
                                 activation_cfg=self.activation_cfg, 
                                 img_size=self.plans['plans_per_stage'][1]['patch_size'],
                                 num_classes=self.num_classes, in_channels=self.num_input_channels,
