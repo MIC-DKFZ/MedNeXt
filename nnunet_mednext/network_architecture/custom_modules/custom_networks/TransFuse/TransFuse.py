@@ -345,10 +345,10 @@ class Conv(nn.Module):
 if __name__ == "__main__":
 
     model = TransFuse_S(img_size=128, in_chans=1, dummy=False, num_classes=9)
-    x = torch.zeros((1,1,128,128,128))
-    # with torch.no_grad():
-    #     model.training=False
-    #     print(model(x).shape)
+    x = torch.zeros((1,1,128,128))
+    with torch.no_grad():
+        model.training=False
+        print(model(x).shape)
     
     # model.training = True
     def count_parameters(model):
