@@ -134,7 +134,7 @@ class BasicTransDecoderBlock(nn.Module):
         #x1: low-res, x2: high-res
         x1 = self.bn_l(x1)
         x2 = self.bn_h(x2)
-        print(residue.shape ,x1.shape, x2.shape)
+        # print(residue.shape ,x1.shape, x2.shape)
         if not self.dummy:
             out, q_k_attn = self.attn(x2, x1)
         else:
