@@ -35,7 +35,7 @@ class ResTransUNet(ResTransUNet_orig, SegmentationNetwork):
         self.conv_op = nn.Conv3d
         self.inference_apply_nonlin = softmax_helper
         self.input_shape_must_be_divisible_by = 16 # just some random val 2**5
-        self.num_classes = kwargs['out_channels']
+        self.num_classes = kwargs['num_classes']
         self.do_ds = False
 
 
