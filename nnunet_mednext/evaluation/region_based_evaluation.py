@@ -92,6 +92,11 @@ def get_btcv_regions():
     }
     return regions
 
+def create_generic_regions(n):
+
+    regions = {str(k):(k,) for k in range(1,n+1)}
+    return regions
+
 def create_region_from_mask(mask, join_labels: tuple):
     mask_new = np.zeros_like(mask, dtype=np.uint8)
     for l in join_labels:
@@ -142,7 +147,7 @@ def evaluate_regions(folder_predicted: str, folder_gt: str, regions: dict, proce
         files_in_pred = subfiles(folder_predicted, suffix='.nii.gz', join=False)
         files_in_gt = subfiles(folder_gt, suffix='.nii.gz', join=False)
         have_no_gt = [i for i in files_in_pred if i not in files_in_gt]
-        assert len(have_no_gt) == 0, "Some files in folder_predicted have not ground truth in folder_gt"
+        assert len(have_no_gt) == 0, "Some files in folder_predicted have not ground truth in folder_gt. All preds must have gt!!"
         have_no_pred = [i for i in files_in_gt if i not in files_in_pred]
         if len(have_no_pred) > 0:
             print("WARNING! Some files in folder_gt were not predicted (not present in folder_predicted)!")
@@ -203,23 +208,28 @@ def main():
     args.add_argument('--folder_gt_niftis', type=str)
     args.add_argument('--measures', nargs='+', type=str, 
                         default=['dc', 'surface_dc'])
-    args.add_argument('--regions', type=str, choices=['brats21', 'kits19', 'btcv', 'amos22'])    
+    args.add_argument('--regions', type=str, choices=['brats21', 'kits19', 'btcv', 'amos22', 'generic'])
+    args.add_argument('--n_classes', type=int, default=None)
     args = args.parse_args()
 
-    if args.regions == 'brats21':
-        regions = get_brats_regions
-    elif args.regions == 'kits19':
-        regions = get_kits19_regions
-    elif args.regions == 'amos22':
-        regions = get_amos22_regions
-    elif args.regions == 'btcv':
-        regions = get_btcv_regions
+    if args.regions != 'generic':
+        if args.regions == 'brats21':
+            regions = get_brats_regions
+        elif args.regions == 'kits19':
+            regions = get_kits19_regions
+        elif args.regions == 'amos22':
+            regions = get_amos22_regions
+        elif args.regions == 'btcv':
+            regions = get_btcv_regions
+        regs = regions()
+    else:
+        regs = create_generic_regions(args.n_classes)
 
-    print(regions())
+    print(regs)
     evaluate_regions(
         args.folder_predicted, 
         args.folder_gt_niftis,
-        regions(),
+        regs,
         )
 
 if __name__ == '__main__':
