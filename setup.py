@@ -1,10 +1,10 @@
 from setuptools import setup, find_namespace_packages
 
 setup(name='mednextv1',
-      packages=find_namespace_packages(include=["mednextv1", "mednextv1.*"]),
+      packages=find_namespace_packages(include=["nnunet_mednext", "nnunet_mednext.*"]),
       version='1.7.0',
       description='nnU-Net. Framework for out-of-the box biomedical image segmentation.',
-      url='https://github.com/MIC-DKFZ/mednextv1',
+      url='https://github.com/MIC-DKFZ/MedNeXt',
       author='Division of Medical Image Computing, German Cancer Research Center',
       author_email='f.isensee@dkfz-heidelberg.de',
       license='Apache License Version 2.0, January 2004',
